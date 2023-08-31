@@ -11,7 +11,11 @@ export const AuthContexProvider = ({ children }) => {
   const login = async (inputs) => {
     
       const res = await axios.post("http://localhost:8800/api/auth/login", inputs);
-      setCurrentUser(res.data);
+      
+       // Save the token to local storage
+       localStorage.setItem("token", res.data.access_token);
+      
+       setCurrentUser(res.data);
   
    
   };

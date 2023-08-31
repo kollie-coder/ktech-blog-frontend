@@ -5,6 +5,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useLocation, useNavigate } from "react-router-dom";
 import moment from "moment";
 
+
 const Write = () => {
 
   const state = useLocation().state;
@@ -14,6 +15,7 @@ const Write = () => {
   const [cat, setCat] = useState(state?.cat || "");
 
   const navigate = useNavigate()
+
 
   const upload = async () => {
     try {
@@ -32,27 +34,41 @@ const Write = () => {
   e.preventDefault()
   const imgUrl = await upload()
 
-  try{
-    state
-    ? await axios.put(`http://localhost:8800/api/posts/${state.id}`, {
-      title,
-      desc: value,
-      cat,
-      img: file ? imgUrl : "",
-    })
-    : await axios.post(`http://localhost:8800/api/posts/`, {
-      title,
-            desc: value,
-            cat,
-            img: file ? imgUrl : "",
-            date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
-          });
-          navigate("/")
+  try {
+  const user = JSON.parse(localStorage.getItem('user'));
 
-  }catch(err){
-    console.log(err)
+// Retrieve the token from the user object
+const token = user.token;
+
+console.log("Retrieved Token:", token);
+    
+    const headers = {
+      Authorization: token
+    };
+    console.log("Headers:", headers); // Check if the headers are correct
+    
+
+    if (state) {
+      await axios.put(`http://localhost:8800/api/posts/${state.id}`, {
+        title,
+        desc: value,
+        cat,
+        img: file ? imgUrl : "",
+      }, { headers }); // Pass the headers with the request
+    } else {
+      await axios.post(`http://localhost:8800/api/posts/`, {
+        title,
+        desc: value,
+        cat,
+        img: file ? imgUrl : "",
+        date: moment(Date.now()).format("YYYY-MM-DD HH:mm:ss"),
+      }, { headers }); // Pass the headers with the request
+      navigate("/");
+    }
+  } catch (err) {
+    console.log(err);
   }
- }
+};
 
   return (
     <div className='add'>
