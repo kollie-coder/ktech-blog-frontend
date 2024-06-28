@@ -1,41 +1,67 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link, useNavigate } from "react-router-dom";
-import axios from "axios"
+import useSignUpWithEmailAndPassword from '../hooks/useSignUpWithEmailAndPassword';
+import { AuthContext } from '../context/authContext';
 
 const Register = () => {
-  const [inputs, setInputs] = useState({
+ const [inputs, setInputs] = useState({
     username:"",
+    fullName:"",
     email:"",
     password:"",
   });
-  const [err, setError] = useState(null);
 
-  const navigate = useNavigate();
+    const { loading, error, signup } = useSignUpWithEmailAndPassword();
+    const { setCurrentUser } = useContext(AuthContext);
+    const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+    const handleRegister = async (e) => {
+      e.preventDefault();
+      const user = await signup(inputs);
+      if (user) {
+        setCurrentUser(user);
+        navigate('/');
+      }
+    };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await axios.post("http://localhost:8800/api/auth/register", inputs);
-      navigate("/login");
-    } catch (err) {
-      setError(err.response.data);
-    }
-  };
+
 
   return (
     <div className='auth'>
       <h1>Register</h1>
-      <form>
-        <input required type="text" placeholder="username" name='username' onChange={handleChange} />
-        <input required type="email" placeholder="email" name='email' onChange={handleChange} />
-        <input required type="password" placeholder="password" name='password' onChange={handleChange} />
-        <button onClick={handleSubmit}>Register</button>
-        {err && <p>{err}</p>}
-        <span>  Do you have an account ? <Link to="/login">Login</Link>
+      <form onSubmit={handleRegister}>
+          <input required 
+          type="text"
+          placeholder="username"
+          name='username'
+          value={inputs.username}
+          onChange={(e) =>setInputs({...inputs,username:e.target.value})} 
+          />
+          <input required 
+          type="text" 
+          placeholder="full name" 
+          value={inputs.fullName}
+          onChange={(e) =>setInputs({...inputs,fullName:e.target.value})}
+          />
+          <input required 
+          type="email"
+          placeholder="email"
+          value={inputs.email}
+          onChange={(e) =>setInputs({...inputs,email:e.target.value})}
+          />
+          <input required 
+          type="password" 
+          placeholder="password"  
+          value={inputs.password}
+          onChange={(e) =>setInputs({...inputs,password:e.target.value})}
+          />
+        
+        {error && <div className="alert"> {error.message} </div>}
+        <button type="submit" disabled={loading}>
+          {loading ? "Registering..." : "Register"}
+        </button>
+        
+        <span> Do you have an account ? <Link to="/login">Login</Link>
         </span>
       </form>
     </div>

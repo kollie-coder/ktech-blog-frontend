@@ -12,15 +12,22 @@ import Write from "./pages/Write";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import "./style.scss"
+import PrivateRoute from "./components/PrivateRoute";
+import { useContext } from "react";
+import { AuthContext } from "./context/authContext";
+import PrivateRoute2 from "./components/PrivateRoute2";
 
 
 const Layout = () => {
+ 
   
   return (
     <>
-    <Navbar/>
-    <Outlet/>
-    <Footer/>
+    <Navbar />
+      <div className="main-content">
+        <Outlet />
+      </div>
+      <Footer />
     </>
   );
 };
@@ -40,19 +47,19 @@ const router = createBrowserRouter([
       },
       {
         path: "/write",
-        element:<Write/>
+        element: <PrivateRoute> <Write/> </PrivateRoute>
       },
     ]
     
   },
   {
     path: "/register",
-    element: <Register/>,
+    element: <PrivateRoute2> <Register/> </PrivateRoute2>,
     
   },
   {
     path: "/login",
-    element: <Login/>,
+    element: <PrivateRoute2> <Login/> </PrivateRoute2>,
     
   },
   

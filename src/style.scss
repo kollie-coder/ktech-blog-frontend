@@ -5,7 +5,10 @@ $lightGreen: #b9e7e7;
   justify-content: center;
   .container {
     width: 1024px;
-
+  .main-content {
+    flex: 1;
+    min-height: 100%;
+  }
     .link {
       text-decoration: none;
       color: inherit;
@@ -64,11 +67,18 @@ $lightGreen: #b9e7e7;
     //NAVBAR
 
     .navbar {
+      position: fixed;
+      top: 0;
+      
+      background-color: #FFFFFF;
+      z-index: 100;
+      //box-shadow: 0 4px 2px -2px gray;
       .container {
         padding: 10px 0px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        
         .logo {
           img {
             width: 120px;
@@ -119,6 +129,7 @@ $lightGreen: #b9e7e7;
       align-items: center;
       justify-content: space-between;
       font-size: 12px;
+      
       img {
         height: 50px;
       }
@@ -128,7 +139,7 @@ $lightGreen: #b9e7e7;
 
     .home {
       .posts {
-        margin-top: 50px;
+        margin-top: 70px;
         display: flex;
         flex-direction: column;
         gap: 150px;
@@ -204,6 +215,7 @@ $lightGreen: #b9e7e7;
 
         display: flex;
         gap: 50px;
+        margin-top: 120px;
 
         .content{
             flex: 5;
@@ -303,7 +315,7 @@ $lightGreen: #b9e7e7;
     //Write
 
     .add {
-        margin-top: 20px;
+        margin-top: 120px;
         display: flex;
         gap: 20px;
   
