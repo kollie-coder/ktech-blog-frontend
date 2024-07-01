@@ -13,7 +13,7 @@ const useSignUpWithEmailAndPassword = () => {
       const signup = async (inputs) => {
         if(!inputs.email || !inputs.password || !inputs.username || !inputs.fullName){
             alert("Please fill all the fields")
-            return;
+            return null;
         }
 
         try {
@@ -23,7 +23,7 @@ const useSignUpWithEmailAndPassword = () => {
     
           if (!querySnapshot.empty) {
             alert("Username already exists");
-            return;
+            return null;
           }
 
 
@@ -31,7 +31,7 @@ const useSignUpWithEmailAndPassword = () => {
             
             if(!newUser && error){
                 console.log(error)
-                return
+                return null;
             }
             console.log("User created:", newUser);
 
@@ -43,9 +43,10 @@ const useSignUpWithEmailAndPassword = () => {
                 username: inputs.username, 
                 posts: [],
                 createdAt: Date.now(),
-               }  
+               };  
                await setDoc(doc(firestore, "users", newUser.user.uid), userDoc); 
                localStorage.setItem("user-info", JSON.stringify(userDoc));
+               return newUser.user;
                console.log("User document set in Firestore and localStorage");
             }
             
